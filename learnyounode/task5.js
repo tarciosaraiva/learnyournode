@@ -6,7 +6,7 @@ String.prototype.endsWith = function (suffix) {
 };
 
 if (process.argv.length !== 4) {
-  console.error('Format is node task4.js <dir> <extension>');
+  console.error('Format is node task5.js <dir> <extension>');
   process.exit(0);
 }
 
