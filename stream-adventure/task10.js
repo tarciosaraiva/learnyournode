@@ -3,15 +3,18 @@ var trumpet = require('trumpet');
 
 function write(data) {
   var line = data.toString();
-  this.emit('data', line.toUpperCase());
+  this.queue(line.toUpperCase());
 }
 
+var tr = through(write);
 var tp = trumpet();
-tp.pipe(process.stdout);
 
-tp.selectAll('.loud', function (loud) {
-  var tr = through(write);
-  loud.createStream().pipe(tr).pipe(process.stdout);
-});
+// creating stream with filter
+var loud = tp.select('.loud').createStream();
 
-process.stdin.pipe(tp);
+// then piping it back to itself
+// so the contents of the selected
+// elements can be replaced
+loud.pipe(tr).pipe(loud);
+
+process.stdin.pipe(tp).pipe(process.stdout);
