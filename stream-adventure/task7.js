@@ -10,10 +10,10 @@ function write(data) {
 
 var server = http.createServer(function (req, res) {
   if (req.method === 'POST') {
+    // through has to be defined inside the server
+    // otherwise the context will be the running process
+    // and not the server
     var tr = through(write);
-    // req.pipe(through(function (buf) {
-    //   this.queue(buf.toString().toUpperCase());
-    // })).pipe(res);
     req.pipe(tr).pipe(res);
   }
 });
