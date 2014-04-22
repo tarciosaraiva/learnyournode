@@ -3,16 +3,20 @@ var duplex = require('duplexer');
 
 module.exports = function (counter) {
   var hashcount = {};
-  var ws = through(function (obj) {
-    // write callback
-    var country = obj.country;
-    if (!hashcount[country])
+
+  function write(data) {
+    var country = data.country;
+    if (!hashcount[country]) {
       hashcount[country] = 0;
+    }
     hashcount[country]++;
-  }, function () {
-    // end callback
+  }
+
+  function end() {
     counter.setCounts(hashcount);
-  });
+  }
+
+  var ws = through(write, end);
 
   return duplex(ws, counter);
 };
